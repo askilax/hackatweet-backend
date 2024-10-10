@@ -32,7 +32,7 @@ router.post('/signup', async (req, res) => {
       firstname,username, password: hashedPass, token,
     })
     await newUser.save();
-    res.json({ result: true, Message: `${username} registered successfully.`, token })
+    res.status(200).json({ result: true, Message: `${username} registered successfully.`, token })
   } catch (error) {
     res.status(500).json({ result: false, message: 'Server error', error });
   }
@@ -50,7 +50,7 @@ router.post('/signin', async (req, res) => {
    username = username.toLowerCase();
   try {
         // vérifie si il existe deja en DB
-    const existUser = await User.findOne({ username });
+    const existUser = await User.findOne({ username: `@${username}` });
     if (!existUser) {
       return res.json({ result: false, error: 'User not found' })
     }
@@ -59,7 +59,7 @@ router.post('/signin', async (req, res) => {
     if (!isMatch) {
       return res.json({ result: false, error: 'Incorrect password.' })
     }
-    res.json({ result: true, message: `${username} Signin successful`, token: existUser.token })
+    res.status(200).json({ result: true, message: `@${username} Signin successful`, token: existUser.token })
   } catch (error) {
     res.status(500).json({ result: false, error: 'server error', error })
   }
