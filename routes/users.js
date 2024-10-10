@@ -2,16 +2,17 @@ var express = require('express');
 var router = express.Router();
 const argon2 = require('argon2');
 const uid2 = require('uid2');
-//import du model
+const User = require('../models/users')
 
 router.post('/signup', async (req, res) => {
   // recup les infos envoyer
-  let { username, password } = req.body
+  let { firstname, username, password } = req.body
   // vérifie si les champs sont remplis
-  if (!username || !password) {
+  if (!firstname|| !username || !password) {
     return res.json({ result: false, Error: 'Missing or empty fields.' })
   }
   // en minuscule
+  firstname = firstname.toLowerCase();
   username = username.toLowerCase();
   try {
     // vérifie si il existe deja en DB
@@ -28,7 +29,7 @@ router.post('/signup', async (req, res) => {
     // token et enregistrement de l'utilisateur 
     const token = uid2(32)
     const newUser = new User({
-      username, password: hashedPass, token,
+      firstname,username, password: hashedPass, token,
     })
     await newUser.save();
     res.json({ result: true, Message: `${username} registered successfully.`, token })
@@ -40,13 +41,13 @@ router.post('/signup', async (req, res) => {
 
 router.post('/signin', async (req, res) => {
     // recup les infos envoyer
-  let { username, password } = req.body;
+  let {username, password } = req.body;
     // vérifie si les champs sont remplis
   if (!username || !password) {
     return res.json({ result: false, error: 'Missing or empty fields.' })
   };
    // en minuscule
-  username = username.toLowerCase()
+   username = username.toLowerCase();
   try {
         // vérifie si il existe deja en DB
     const existUser = await User.findOne({ username });
