@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
 const UserSchema = new mongoose.Schema({
-    firstname: { type: String, required: true },
-    username: {
+    firstName: { type: String, required: true },
+    userName: {
         type: String,
         set: function(value) {
             return value.startsWith('@') ? value : `@${value}`;
