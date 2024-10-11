@@ -59,7 +59,7 @@ router.post('/signin', async (req, res) => {
     if (!isMatch) {
       return res.json({ result: false, error: 'Incorrect password.' })
     }
-    res.status(200).json({ result: true, message: `@${username} Signin successful`, token: existUser.token })
+    res.status(200).json({ result: true, message: `@${username} Signin successful`, token: existUser.token, firstName: existUser.firstname, userName: existUser.username })
   } catch (error) {
     res.status(500).json({ result: false, error: 'server error', error })
   }
